@@ -1,6 +1,11 @@
-=====================
 Matchlight Python SDK
 =====================
+
+.. image:: https://img.shields.io/travis/TerbiumLabs/python-matchlightsdk.svg
+   :target: https://travis-ci.org/TerbiumLabs/python-matchlightsdk
+
+.. image:: https://img.shields.io/coveralls/TerbiumLabs/python-matchlightsdk.svg
+   :target: https://coveralls.io/r/TerbiumLabs/python-matchlightsdk
 
 Matchlight exists to quickly and privately alert its users when any of their
 sensitive information appears for sale or vandalism out on the dark web. The
@@ -29,5 +34,15 @@ https://matchlightsdk.readthedocs.io.
 
 License
 -------
+
 The Matchlight Python SDK source code is licensed under the
-`3-clause BSD License <https://opensource.org/licenses/BSD-3-Clause>`_.
+`3-clause BSD License <https://opensource.org/licenses/BSD-3-Clause>`_. For
+more information, please see the LICENSE file included in this repository or
+source distribution.
+
+Contributing
+------------
+
+Bug reports and pull requests are welcome. If you would like to contribute,
+please create a pull request against **master**. Include unit tests if
+necessary, and ensure that your code passes all linters (see tox.ini).
