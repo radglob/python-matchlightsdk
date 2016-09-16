@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 """Setup script for Matchlight SDK."""
+import os
 import sys
 
 import setuptools
-
-
-test_requirements = ['httpretty', 'mock', 'pytest>=2.8.0', 'pytest-cov', 'pytest-httpretty']
 
 
 def setup():  # noqa: D103
@@ -17,6 +15,18 @@ def setup():  # noqa: D103
     if needs_pytest:
         setup_requirements.append('pytest-runner')
     install_requirements = ['requests[security]', 'six']
+    test_requirements = [
+        'httpretty',
+        'mock',
+        'pytest>=2.8.0',
+        'pytest-cov',
+        'pytest-httpretty',
+    ]
+    # Readthedocs requires Sphinx extensions to be specified as part of
+    # install_requires in order to build properly.
+    on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+    if on_rtd:
+        install_requirements.extend(setup_requirements)
     if sys.version_info < (3,):
         install_requirements.append('backports.csv')
     setuptools.setup(
