@@ -1,8 +1,6 @@
 language: python
 before_script:
   - pip install tox
-  # https://github.com/gabrielfalcao/HTTPretty/issues/242
-  - pip install ndg-httpsclient==0.3.0
 
 script: tox
 

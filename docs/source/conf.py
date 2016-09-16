@@ -48,10 +48,10 @@ html_sidebars = {
         'donate.html',
     ],
 }
-intersphinx_mapping = {'https://docs.python.org/': None}
-pdf_documents = [(
-    'index',
-    'rst2pdf',
-    'Matchlight SDK Documentation',
-    'Terbium Labs',
-)]
+# intersphinx_mapping = {'https://docs.python.org/': None}
+# pdf_documents = [(
+#     'index',
+#     'rst2pdf',
+#     'Matchlight SDK Documentation',
+#     'Terbium Labs',
+# )]
