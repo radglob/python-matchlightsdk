@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Setup script for Matchlight SDK."""
+import io
 import os
 import sys
 
@@ -29,11 +30,14 @@ def setup():  # noqa: D103
         install_requirements.extend(setup_requirements)
     if sys.version_info < (3,):
         install_requirements.append('backports.csv')
+    with io.open('README.rst') as fp:
+        readme = fp.read()
     setuptools.setup(
         name='matchlightsdk',
         license='BSD',
         description=('Software development kit for the Terbium Labs '
                      'Matchlight product.'),
+        long_description=readme + '\n',
         author='Terbium Labs',
         author_email='developers@terbiumlabs.com',
         url='https://terbiumlabs.com',
@@ -41,6 +45,7 @@ def setup():  # noqa: D103
         package_dir={'': 'src'},
         use_scm_version=True,
         package_data={
+            '': ['LICENSE'],
             'pylibfp': [
                 'lib/*.so',
                 'lib/*.dll',
