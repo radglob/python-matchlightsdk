@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+"""Setup script for Matchlight SDK."""
+import sys
+
+import setuptools
+
+
+test_requirements = ['httpretty', 'mock', 'pytest>=2.8.0', 'pytest-cov', 'pytest-httpretty']
+
+
+def setup():  # noqa: D103
+    needs_sphinx = {'build_sphinx', 'upload_docs'}.intersection(sys.argv)
+    needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
+    setup_requirements = ['setuptools_scm']
+    if needs_sphinx:
+        setup_requirements.append('sphinx>=1.3')
+    if needs_pytest:
+        setup_requirements.append('pytest-runner')
+    install_requirements = ['requests[security]', 'six']
+    if sys.version_info < (3,):
+        install_requirements.append('backports.csv')
+    setuptools.setup(
+        name='matchlightsdk',
+        license='BSD',
+        description=('Software development kit for the Terbium Labs '
+                     'Matchlight product.'),
+        author='Terbium Labs',
+        author_email='developers@terbiumlabs.com',
+        url='https://terbiumlabs.com',
+        packages=setuptools.find_packages('src'),
+        package_dir={'': 'src'},
+        use_scm_version=True,
+        package_data={
+            'pylibfp': [
+                'lib/*.so',
+                'lib/*.dll',
+                'lib/*.dylib',
+            ],
+        },
+        classifiers=[
+            'Development Status :: 4 - Beta',
+            'Intended Audience :: Developers',
+            'Intended Audience :: Financial and Insurance Industry',
+            'Intended Audience :: Healthcare Industry',
+            'Intended Audience :: Information Technology',
+            'Intended Audience :: Legal Industry',
+            'Intended Audience :: Science/Research',
+            'Natural Language :: English',
+            'License :: OSI Approved :: BSD License',
+            'Programming Language :: Python',
+            'Programming Language :: Python :: 2',
+            'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.4',
+            'Programming Language :: Python :: 3.5',
+            'Topic :: Software Development :: Libraries :: Python Modules',
+        ],
+        install_requires=install_requirements,
+        setup_requires=setup_requirements,
+        tests_require=test_requirements,
+    )
+
+
+if __name__ == '__main__':
+    setup()

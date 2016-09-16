@@ -1,0 +1,3 @@
+-r test.in
+cython
+pytest-runner

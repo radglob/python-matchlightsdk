@@ -1,0 +1,6 @@
+-r main.in
+mock
+pytest
+pytest-cov
+# pytest-factoryboy
+pytest-httpretty
