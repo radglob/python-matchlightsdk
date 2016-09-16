@@ -7,6 +7,9 @@ Matchlight Python SDK
 .. image:: https://img.shields.io/coveralls/TerbiumLabs/python-matchlightsdk.svg
    :target: https://coveralls.io/r/TerbiumLabs/python-matchlightsdk
 
+.. image:: https://img.shields.io/pypi/pyversions/matchlightsdk.svg
+   :target: https://pypi.python.org/pypi/matchlightsdk/
+
 Matchlight exists to quickly and privately alert its users when any of their
 sensitive information appears for sale or vandalism out on the dark web. The
 product is fully automated, and operates using Data Fingerprints — a one-way
