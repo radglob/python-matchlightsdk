@@ -84,14 +84,14 @@ connection.
 If you have your authorization tokens stored as enviroment variables, creating
 a connection to Matchlight is as simple as::
 
-    from matchlightsdk import Matchlight
+    from matchlight import Matchlight
     ml = Matchlight()
 
 Otherwise, provide your access and secret tokens as keyword arguments.
 
 .. code-block:: python
 
-    from matchlightsdk import Matchlight
+    from matchlight import Matchlight
     ml = Matchlight(access_key='access key',
                     secret_key='secret key')
 
