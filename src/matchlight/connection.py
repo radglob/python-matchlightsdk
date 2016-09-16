@@ -120,7 +120,6 @@ class Connection(object):
         return response
 
     def _request(self, method, url, data=None, **kwargs):
-        print(url)
         try:
             response = self.session.request(method, url, data=data, **kwargs)
             if response.status_code == 200:
