@@ -251,7 +251,7 @@ def test_feed_download_output(mock_open, connection, feed, start_time,
         ],
     )
 
-    body = '\n'.join(feed_report_csv)
+    body = '\n'.join(feed_report_csv).encode('utf-8')
     httpretty.register_uri(
         httpretty.GET, feed_download_url,
         content_type='text/csv',
