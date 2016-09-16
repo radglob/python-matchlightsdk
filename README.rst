@@ -21,9 +21,8 @@ Installation
 ------------
 
 Matchlight SDK is supported on Python 2.7, 3.3, 3.4, and 3.5. To install the
-SDK, you'll need `pip <https://pip.pypa.io/en/stable/>`_:
+SDK, you'll need `pip <https://pip.pypa.io/en/stable/>`_::
 
-.. code-block:: shell
     $ pip install matchlightsdk
 
 Documentation
