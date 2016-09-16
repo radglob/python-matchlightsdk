@@ -141,14 +141,14 @@ def fingerprints_pii_name_variants(first_name, middle_name, last_name):
         middle_name = _ensure_bytes(middle_name)
     last_name = _ensure_bytes(last_name)
     assets_json = _ensure_unicode(_libfp.assets_from_name(
-            "temporary", "0", first_name, middle_name, last_name))
+            b"temporary", b"0", first_name, middle_name, last_name))
     assets = json.loads(assets_json)
     return [asset["fingerprints"] for asset in assets]
 
 def fingerprints_pii_address_variants(street_address):
     street_address = _ensure_bytes(street_address)
     assets_json = _ensure_unicode(_libfp.assets_from_address(
-            "temporary", "0", street_address))
+            b"temporary", b"0", street_address))
     assets = json.loads(assets_json)
     return [asset["fingerprints"] for asset in assets]
 
@@ -157,28 +157,28 @@ def fingerprints_pii_city_state_zip_variants(city, state, zipcode):
     state = _ensure_bytes(state)
     zipcode = _ensure_bytes(zipcode)
     assets_json = _ensure_unicode(_libfp.assets_from_city_state_zip(
-            "temporary", "0", city, state, zipcode))
+            b"temporary", b"0", city, state, zipcode))
     assets = json.loads(assets_json)
     return [asset["fingerprints"] for asset in assets]
 
 def fingerprints_pii_email_address(email):
     email = _ensure_bytes(email)
     assets_json = _ensure_unicode(_libfp.assets_from_email_address(
-            "temporary", "0", email))
+            b"temporary", b"0", email))
     assets = json.loads(assets_json)
     return assets[0]["fingerprints"]
 
 def fingerprints_pii_ssn(ssn):
     ssn = _ensure_bytes(ssn)
     assets_json = _ensure_unicode(_libfp.assets_from_ssn(
-            "temporary", "0", ssn))
+            b"temporary", b"0", ssn))
     assets = json.loads(assets_json)
     return assets[0]["fingerprints"]
 
 def fingerprints_pii_phone_number(phone_number):
     phone_number = _ensure_bytes(phone_number)
     assets_json = _ensure_unicode(_libfp.assets_from_phone_number(
-            "temporary", "0", phone_number))
+            b"temporary", b"0", phone_number))
     assets = json.loads(assets_json)
     return assets[0]["fingerprints"]
 

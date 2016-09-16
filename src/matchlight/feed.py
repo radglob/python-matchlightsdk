@@ -200,7 +200,7 @@ class FeedMethods(object):
     def _format_count(self, counts):
         return {
             datetime.datetime.fromtimestamp(int(k)).strftime('%Y-%m-%d'): v
-            for k, v in counts.iteritems()
+            for k, v in counts.items()
         }
 
     def _format_feed(self, feed_row):
