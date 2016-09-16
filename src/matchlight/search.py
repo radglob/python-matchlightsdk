@@ -106,7 +106,7 @@ class SearchMethods(object):
         artifact_urls = {
             artifact_id: sorted([
                 (int(ts), url) for ts, url in details['url'].items()
-            ], key=lambda (ts, url): ts)
+            ], key=lambda url: url[0])
             for artifact_id, details in response.json()['details'].items()
         }
         for result in results:
