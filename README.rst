@@ -30,4 +30,4 @@ https://matchlightsdk.readthedocs.io.
 License
 -------
 The Matchlight Python SDK source code is licensed under the
-`3-clause BSD License. <https://opensource.org/licenses/BSD-3-Clause>`_.
+`3-clause BSD License <https://opensource.org/licenses/BSD-3-Clause>`_.
