@@ -9,7 +9,7 @@ import setuptools_scm
 sys.path.insert(0, os.path.abspath('../../src'))
 needs_sphinx = '1.3'
 extensions = [
-    'rst2pdf.pdfbuilder',
+    # 'rst2pdf.pdfbuilder',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
