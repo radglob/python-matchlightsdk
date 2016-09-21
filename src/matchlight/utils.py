@@ -15,7 +15,7 @@ def blind_name(name, width=5):
     """Censors all but the first character of the given string."""
     if name is None:
         name = ''
-    return name.ljust(width, '*')
+    return name[0].ljust(width, '*')
 
 
 def blind_email(email):
