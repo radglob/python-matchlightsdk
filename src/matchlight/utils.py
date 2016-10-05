@@ -3,7 +3,6 @@ import calendar
 import datetime
 
 
-
 __all__ = (
     'blind_email',
     'blind_name',
