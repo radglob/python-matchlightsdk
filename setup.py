@@ -45,7 +45,7 @@ def setup():  # noqa: D103
         package_dir={'': 'src'},
         use_scm_version=True,
         package_data={
-            '': ['LICENSE'],
+            '': ['LICENSE', 'LICENSES'],
             'pylibfp': [
                 'lib/*.so',
                 'lib/*.dll',

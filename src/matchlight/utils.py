@@ -1,6 +1,6 @@
 """Various helper utiliites."""
+import calendar
 import datetime
-import time
 
 
 __all__ = (
@@ -35,7 +35,7 @@ def blind_email(email):
 
 def datetime_to_unix(dt):
     """Returns the Unix time for the given datetime object."""
-    return time.mktime(dt.timetuple())
+    return calendar.timegm(dt.utctimetuple())
 
 
 def terbium_timestamp_to_datetime(timestamp):
