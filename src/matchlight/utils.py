@@ -36,7 +36,7 @@ def blind_email(email):
 
 def datetime_to_unix(dt):
     """Returns the Unix time for the given datetime object."""
-    return calendar.timegm(dt.timetuple())
+    return calendar.timegm(dt.utctimetuple())
 
 
 def terbium_timestamp_to_datetime(timestamp):
