@@ -102,7 +102,7 @@ def _ensure_unicode(v):
 
 def _decode_raw(s):
     c = ML_HASH_LENGTH * 2
-    return [s[i:i+c] for i in range(0, len(s), c)]
+    return [_ensure_unicode(s[i:i+c]) for i in range(0, len(s), c)]
 
 
 def fingerprint(content, mode=MODE_TEXT, boolean=False, raw=False, flags=0):
@@ -143,14 +143,16 @@ def fingerprints_pii_name_variants(first_name, middle_name, last_name):
     assets_json = _ensure_unicode(_libfp.assets_from_name(
             b"temporary", b"0", first_name, middle_name, last_name))
     assets = json.loads(assets_json)
-    return [asset["fingerprints"] for asset in assets]
+    return [[_ensure_unicode(fp) for fp in asset["fingerprints"]]
+            for asset in assets]
 
 def fingerprints_pii_address_variants(street_address):
     street_address = _ensure_bytes(street_address)
     assets_json = _ensure_unicode(_libfp.assets_from_address(
             b"temporary", b"0", street_address))
     assets = json.loads(assets_json)
-    return [asset["fingerprints"] for asset in assets]
+    return [[_ensure_unicode(fp) for fp in asset["fingerprints"]]
+            for asset in assets]
 
 def fingerprints_pii_city_state_zip_variants(city, state, zipcode):
     city = _ensure_bytes(city)
@@ -159,28 +161,32 @@ def fingerprints_pii_city_state_zip_variants(city, state, zipcode):
     assets_json = _ensure_unicode(_libfp.assets_from_city_state_zip(
             b"temporary", b"0", city, state, zipcode))
     assets = json.loads(assets_json)
-    return [asset["fingerprints"] for asset in assets]
+    return [[_ensure_unicode(fp) for fp in asset["fingerprints"]]
+            for asset in assets]
 
 def fingerprints_pii_email_address(email):
     email = _ensure_bytes(email)
     assets_json = _ensure_unicode(_libfp.assets_from_email_address(
             b"temporary", b"0", email))
     assets = json.loads(assets_json)
-    return assets[0]["fingerprints"]
+    assert(len(assets) == 1)
+    return [_ensure_unicode(fp) for fp in assets[0]["fingerprints"]]
 
 def fingerprints_pii_ssn(ssn):
     ssn = _ensure_bytes(ssn)
     assets_json = _ensure_unicode(_libfp.assets_from_ssn(
             b"temporary", b"0", ssn))
     assets = json.loads(assets_json)
-    return assets[0]["fingerprints"]
+    assert(len(assets) == 1)
+    return [_ensure_unicode(fp) for fp in assets[0]["fingerprints"]]
 
 def fingerprints_pii_phone_number(phone_number):
     phone_number = _ensure_bytes(phone_number)
     assets_json = _ensure_unicode(_libfp.assets_from_phone_number(
             b"temporary", b"0", phone_number))
     assets = json.loads(assets_json)
-    return assets[0]["fingerprints"]
+    assert(len(assets) == 1)
+    return [_ensure_unicode(fp) for fp in assets[0]["fingerprints"]]
 
 from ._version import get_versions
 __version__ = get_versions()['version']
