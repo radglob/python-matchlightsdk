@@ -23,7 +23,7 @@ class SearchMethods(object):
         self.conn = ml_connection
 
     def search(self, query=None, email=None, ssn=None, phone=None,
-               fingerprints=None):  # NOQA
+               fingerprints=None):
         """Performs a Matchlight search.
 
         Provides a retrospective search capability. User can only
