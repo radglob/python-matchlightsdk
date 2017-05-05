@@ -17,8 +17,6 @@ __all__ = (
 )
 
 
-# XXX: v1 API is only used for search, will be changed in a future release
-MATCHLIGHT_API_URL_V1 = 'https://api.matchlig.ht/api/v1'
 MATCHLIGHT_API_URL_V2 = 'https://api.matchlig.ht/api/v2'
 
 
@@ -62,7 +60,7 @@ class Connection(object):
         if endpoint is None:
             endpoint = MATCHLIGHT_API_URL_V2
         if search_endpoint is None:
-            search_endpoint = MATCHLIGHT_API_URL_V1
+            search_endpoint = MATCHLIGHT_API_URL_V2
 
         self.access_key = access_key
         self.secret_key = secret_key
