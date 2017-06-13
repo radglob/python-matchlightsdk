@@ -86,33 +86,18 @@ class SearchMethods(object):
 
         data = {'fingerprints': list(fingerprints)}
         response = self.conn.request(
-            '/search',
+            '/ubersearch',
             data=json.dumps(data),
             endpoint=self.conn.search_endpoint,
             timeout=90.0)
-        results = response.json()['results']
-        artifact_ids = [details['artifact_id'] for details in results]
-        response = self.conn.request(
-            '/artifact/details',
-            data=json.dumps(artifact_ids),
-            endpoint=self.conn.search_endpoint,
-            timeout=90.0,
-        )
-        if response.json().get('status', 'failure') != 'success':
-            raise matchlight.error.SDKError(
-                response.json().get(
-                    'message',
-                    'Failed to get artifact detais'))
-        artifact_urls = {
-            artifact_id: sorted([
-                (int(ts), url) for ts, url in details['url'].items()
-            ], key=lambda url: url[0])
-            for artifact_id, details in response.json()['details'].items()
-        }
+        try:
+            results = response.json()['results']
+        except KeyError:
+            raise matchlight.error.SDKError('Failed to get search results')
         for result in results:
-            for ts, url in artifact_urls[result['artifact_id']]:
+            for url in result['urls']:
                 yield {
                     'score': result['score'],
-                    'ts': datetime.datetime.fromtimestamp(ts),
-                    'url': url,
+                    'ts': datetime.datetime.fromtimestamp(url[0]),
+                    'url': url[1]
                 }
