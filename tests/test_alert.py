@@ -195,3 +195,99 @@ def test_alert_iteration(connection, alert, alert_payload):
     assert next(alerts_iterable).id == alert.id
     with pytest.raises(StopIteration):
         next(alerts_iterable)
+
+
+@pytest.mark.httpretty
+def test_alert_edit(connection, alert, alert_payload):
+    """Verifies alert editing."""
+    # Do nothing
+    httpretty.register_uri(
+        httpretty.POST, '{}/alert/{}/edit'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            alert.id,
+        ),
+        body=json.dumps({
+            'archived': 'true',
+            'seen': 'true'
+        }),
+        status=200
+    )
+    alert = connection.alerts.edit(alert)
+    assert alert.seen is True
+    assert alert.archived is True
+
+    # Un-archive
+    httpretty.register_uri(
+        httpretty.POST, '{}/alert/{}/edit'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            alert.id,
+        ),
+        body=json.dumps({
+            'archived': 'false',
+            'seen': 'true'
+        }),
+        status=200
+    )
+    alert = connection.alerts.edit(alert, archived=False)
+    assert alert.seen is True
+    assert alert.archived is False
+
+    # Un-see
+    httpretty.register_uri(
+        httpretty.POST, '{}/alert/{}/edit'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            alert.id,
+        ),
+        body=json.dumps({
+            'archived': 'false',
+            'seen': 'false'
+        }),
+        status=200
+    )
+    alert = connection.alerts.edit(alert, seen=False)
+    assert alert.seen is False
+    assert alert.archived is False
+
+    # Both
+    httpretty.register_uri(
+        httpretty.POST, '{}/alert/{}/edit'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            alert.id,
+        ),
+        body=json.dumps({
+            'archived': 'true',
+            'seen': 'true'
+        }),
+        status=200
+    )
+    alert = connection.alerts.edit(alert, seen=True, archived=True)
+    assert alert.seen is True
+    assert alert.archived is True
+
+
+@pytest.mark.httpretty
+def test_alert_id_edit(connection, alert, alert_payload):
+    """Verifies alert editing."""
+    httpretty.register_uri(
+        httpretty.GET, '{}/alert/{}'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            alert.id
+        ),
+        body=json.dumps(alert_payload),
+        content_type='application/json',
+        status=200
+    )
+    httpretty.register_uri(
+        httpretty.POST, '{}/alert/{}/edit'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            alert.id,
+        ),
+        body=json.dumps({
+            'archived': 'false',
+            'seen': 'true'
+        }),
+        status=200
+    )
+    alert = connection.alerts.edit(alert.id, archived=False)
+    assert alert.seen is True
+    assert alert.archived is False

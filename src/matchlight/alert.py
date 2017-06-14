@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import datetime
+import json
 
 import matchlight.error
 
@@ -51,8 +52,8 @@ class Alert(object):
             url_metadata=mapping['url_metadata'],
             ctime=mapping['ctime'],
             mtime=mapping['mtime'],
-            seen=mapping['seen'],
-            archived=mapping['archived'],
+            seen=True if mapping['seen'] == 'true' else False,
+            archived=True if mapping['archived'] == 'true' else False,
         )
 
     @property
@@ -197,6 +198,40 @@ class AlertMethods(object):
                 return
             else:
                 raise
+
+    def edit(self, alert, seen=None, archived=None):
+        """Edits an alert.
+
+        Arguments:
+            alert (:class:`~.Alert` or :obj:`str`): An alert instance or id.
+            seen (:obj:`bool`, optional):
+            archived (:obj:`bool`, optional):
+
+        Returns:
+            :class:`~.Alert`: Updated alert instance.
+
+            Note that this method mutates any alert instances passed.
+
+        """
+        if not isinstance(alert, Alert):
+            alert = self.get(alert)
+
+        data = {}
+        if seen is not None:
+            data['seen'] = 1 if seen is True else 0
+
+        if archived is not None:
+            data['archived'] = 1 if archived is True else 0
+
+        response = self.conn.request(
+            '/alert/{}/edit'.format(alert.id),
+            data=json.dumps(data)
+        )
+        response = response.json()
+
+        alert.seen = True if response['seen'] == 'true' else False
+        alert.archived = True if response['archived'] == 'true' else False
+        return alert
 
     def __iter__(self):
         return iter(self.filter())
