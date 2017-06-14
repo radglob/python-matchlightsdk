@@ -16,7 +16,7 @@ __all__ = (
 class Alert(object):
     """Represents an alert."""
 
-    def __init__(self, id, number, url, url_metadata, ctime, mtime, seen,
+    def __init__(self, id, number, type, url, url_metadata, ctime, mtime, seen,
                  archived):
         """Initializes a new alert.
 
@@ -35,6 +35,7 @@ class Alert(object):
         """
         self.id = id
         self.number = number
+        self.type = type
         self.url = url
         self.url_metadata = url_metadata
         self.ctime = ctime
@@ -48,6 +49,7 @@ class Alert(object):
         return cls(
             id=mapping['id'],
             number=mapping['alert_number'],
+            type=mapping['type'],
             url=mapping['url'],
             url_metadata=mapping['url_metadata'],
             ctime=mapping['ctime'],
@@ -65,6 +67,17 @@ class Alert(object):
     def date(self):
         """:class:`datetime.datetime`: The date created timestamp."""
         return datetime.datetime.fromtimestamp(self.ctime)
+
+    @property
+    def details(self):
+        """:obj:`dict`: Returns the alert details as a mapping."""
+        try:
+            return self.conn.request('/alert/{}/details'.format(self.id))
+        except matchlight.error.APIError as err:
+            if err.args[0] == 404:
+                return
+            else:
+                raise
 
     def __repr__(self):  # pragma: no cover
         return '<Alert(number="{}", id="{}")>'.format(
@@ -179,43 +192,18 @@ class AlertMethods(object):
             alerts.append(Alert.from_mapping(payload))
         return alerts
 
-    def get(self, alert_id):
-        """Returns an alert by the given alert ID.
-
-        Args:
-            alert_id (:obj:`str`): The alert identifier.
-
-        Returns:
-           :class:`~.Alert`: A alert instance.
-
-        """
-        try:
-            response = self.conn.request('/alert/{}'.format(alert_id))
-            return Alert.from_mapping(response.json())
-        # for consistency since records.get() returns None if not found.
-        except matchlight.error.APIError as err:
-            if err.args[0] == 404:
-                return
-            else:
-                raise
-
-    def edit(self, alert, seen=None, archived=None):
+    def edit(self, alert_id, seen=None, archived=None):
         """Edits an alert.
 
         Arguments:
-            alert (:class:`~.Alert` or :obj:`str`): An alert instance or id.
+            alert (:obj:`str`): An alert id.
             seen (:obj:`bool`, optional):
             archived (:obj:`bool`, optional):
 
         Returns:
-            :class:`~.Alert`: Updated alert instance.
-
-            Note that this method mutates any alert instances passed.
+            :obj:`dict`: Updated alert metadata.
 
         """
-        if not isinstance(alert, Alert):
-            alert = self.get(alert)
-
         data = {}
         if seen is not None:
             data['seen'] = 1 if seen is True else 0
@@ -224,14 +212,36 @@ class AlertMethods(object):
             data['archived'] = 1 if archived is True else 0
 
         response = self.conn.request(
-            '/alert/{}/edit'.format(alert.id),
+            '/alert/{}/edit'.format(alert_id),
             data=json.dumps(data)
         )
         response = response.json()
+        return {
+            'seen': True if response['seen'] == 'true' else False,
+            'archived': True if response['archived'] == 'true' else False
+        }
 
-        alert.seen = True if response['seen'] == 'true' else False
-        alert.archived = True if response['archived'] == 'true' else False
-        return alert
+    def get_details(self, alert_id):
+        """Returns details of an alert by the given alert ID.
+
+        Args:
+            alert_id (:obj:`str`): The alert identifier.
+
+        Returns:
+           :obj:`dict`: map of the alert details.
+
+        """
+        if isinstance(alert_id, Alert):
+            alert_id = alert_id.id
+
+        try:
+            response = self.conn.request('/alert/{}/details'.format(alert_id))
+            return response.json()
+        except matchlight.error.APIError as err:
+            if err.args[0] == 404:
+                return
+            else:
+                raise
 
     def __iter__(self):
         return iter(self.filter())

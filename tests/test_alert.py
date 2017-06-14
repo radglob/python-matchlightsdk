@@ -10,56 +10,17 @@ import matchlight
 
 
 @pytest.mark.httpretty
-def test_alert_get(connection, alert, alert_payload):
-    """Verifies alert get responses."""
-    httpretty.register_uri(
-        httpretty.GET, '{}/alert/{}'.format(
-            matchlight.MATCHLIGHT_API_URL_V2,
-            alert.id
-        ),
-        responses=[
-            httpretty.Response(
-                body=json.dumps(alert_payload),
-                content_type='application/json',
-                status=200
-            ),
-            httpretty.Response(
-                body='{}',
-                content_type='application/json',
-                status=404
-            ),
-            httpretty.Response(
-                body='{}',
-                content_type='application/json',
-                status=500
-            ),
-        ]
-    )
-    alert_ = connection.alerts.get(alert.id)
-    assert alert.id == alert_.id
-
-    alert_ = connection.alerts.get(alert.id)
-    assert alert_ is None
-
-    with pytest.raises(matchlight.error.ConnectionError):
-        connection.alerts.get(alert.id)
-
-
-@pytest.mark.httpretty
 def test_alert_dates(connection, alert, alert_payload):
     """Verifies alert date objects are converted correctly."""
     httpretty.register_uri(
-        httpretty.GET, '{}/alert/{}'.format(
-            matchlight.MATCHLIGHT_API_URL_V2,
-            alert.id
-        ),
-        body=json.dumps(alert_payload),
+        httpretty.GET, '{}/alerts'.format(matchlight.MATCHLIGHT_API_URL_V2),
+        body=json.dumps({'data': [alert_payload]}),
         content_type='application/json',
         status=200
     )
-    alert_ = connection.alerts.get(alert.id)
-    assert isinstance(alert_.date, datetime.datetime)
-    assert isinstance(alert_.last_modified, datetime.datetime)
+    alerts = connection.alerts.filter()
+    assert isinstance(alerts[0].date, datetime.datetime)
+    assert isinstance(alerts[0].last_modified, datetime.datetime)
 
 
 @pytest.mark.httpretty
@@ -212,9 +173,9 @@ def test_alert_edit(connection, alert, alert_payload):
         }),
         status=200
     )
-    alert = connection.alerts.edit(alert)
-    assert alert.seen is True
-    assert alert.archived is True
+    response = connection.alerts.edit(alert.id)
+    assert response['seen'] is True
+    assert response['archived'] is True
 
     # Un-archive
     httpretty.register_uri(
@@ -228,9 +189,9 @@ def test_alert_edit(connection, alert, alert_payload):
         }),
         status=200
     )
-    alert = connection.alerts.edit(alert, archived=False)
-    assert alert.seen is True
-    assert alert.archived is False
+    response = connection.alerts.edit(alert.id, archived=False)
+    assert response['seen'] is True
+    assert response['archived'] is False
 
     # Un-see
     httpretty.register_uri(
@@ -244,9 +205,9 @@ def test_alert_edit(connection, alert, alert_payload):
         }),
         status=200
     )
-    alert = connection.alerts.edit(alert, seen=False)
-    assert alert.seen is False
-    assert alert.archived is False
+    response = connection.alerts.edit(alert.id, seen=False)
+    assert response['seen'] is False
+    assert response['archived'] is False
 
     # Both
     httpretty.register_uri(
@@ -260,34 +221,26 @@ def test_alert_edit(connection, alert, alert_payload):
         }),
         status=200
     )
-    alert = connection.alerts.edit(alert, seen=True, archived=True)
-    assert alert.seen is True
-    assert alert.archived is True
+    response = connection.alerts.edit(alert.id, seen=True, archived=True)
+    assert response['seen'] is True
+    assert response['archived'] is True
 
 
 @pytest.mark.httpretty
-def test_alert_id_edit(connection, alert, alert_payload):
-    """Verifies alert editing."""
+def test_alert_details(connection, alert, alert_details_pii_payload):
+    """Verifies alert get details responses."""
     httpretty.register_uri(
-        httpretty.GET, '{}/alert/{}'.format(
+        httpretty.GET, '{}/alert/{}/details'.format(
             matchlight.MATCHLIGHT_API_URL_V2,
             alert.id
         ),
-        body=json.dumps(alert_payload),
+        body=json.dumps(alert_details_pii_payload),
         content_type='application/json',
         status=200
     )
-    httpretty.register_uri(
-        httpretty.POST, '{}/alert/{}/edit'.format(
-            matchlight.MATCHLIGHT_API_URL_V2,
-            alert.id,
-        ),
-        body=json.dumps({
-            'archived': 'false',
-            'seen': 'true'
-        }),
-        status=200
-    )
-    alert = connection.alerts.edit(alert.id, archived=False)
-    assert alert.seen is True
-    assert alert.archived is False
+
+    details_ = connection.alerts.get_details(alert)
+    assert details_ == alert_details_pii_payload
+
+    details_ = connection.alerts.get_details(alert.id)
+    assert details_ == alert_details_pii_payload

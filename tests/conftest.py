@@ -92,6 +92,7 @@ def alert_payload(id):
     return {
         'id': id,
         'alert_number': 10,
+        'type': 'pii',
         'url': 'https://terbiumlabs.com/matchlight.html',
         'url_metadata': {
             'description': 'Matchlight provides intelligence on your most imp',
@@ -101,6 +102,25 @@ def alert_payload(id):
         'mtime': time.time(),
         'seen': 'true',
         'archived': 'true',
+    }
+
+
+@pytest.fixture(scope='function')
+def alert_details_pii_payload():
+    """An alert details payload artifact for a pii alert."""
+    return {
+        'details': {
+            'pii': [
+                {
+                    'email': 'o****@gmail.com',
+                    'first': 'a****',
+                    'last': 'b****',
+                    'record_id': 'd3c59d38c4054f62876a2a7a3dca41ca'
+                }
+            ]
+        },
+        'notes': '',
+        'type': 'pii'
     }
 
 
