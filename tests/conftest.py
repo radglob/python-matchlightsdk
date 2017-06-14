@@ -26,6 +26,12 @@ def connection(access_key, secret_key):
 
 
 @pytest.fixture(scope='function')
+def id():
+    """Provides a fake id in the form of a UUID4."""
+    return str(uuid.uuid4())
+
+
+@pytest.fixture(scope='function')
 def number_of_records():
     """A record count fixture."""
     return 10
@@ -78,3 +84,27 @@ def project_payload(project_name, project_type, upload_token,
 def project(project_payload):
     """A project instance fixture, parametrized by project type."""
     return matchlight.Project.from_mapping(project_payload)
+
+
+@pytest.fixture(scope='function')
+def alert_payload(id):
+    """An alert payload artifact."""
+    return {
+        'id': id,
+        'alert_number': 10,
+        'url': 'https://terbiumlabs.com/matchlight.html',
+        'url_metadata': {
+            'description': 'Matchlight provides intelligence on your most imp',
+            'tor_only': 'false'
+        },
+        'ctime': time.time(),
+        'mtime': time.time(),
+        'seen': 'true',
+        'archived': 'true',
+    }
+
+
+@pytest.fixture
+def alert(alert_payload):
+    """An alert instance fixture."""
+    return matchlight.Alert.from_mapping(alert_payload)

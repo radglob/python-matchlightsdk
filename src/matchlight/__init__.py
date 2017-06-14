@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import pkg_resources
 
+from .alert import Alert, AlertMethods
 from .connection import Connection, MATCHLIGHT_API_URL_V2
 from .error import (
     APIError,
@@ -17,6 +18,8 @@ from .search import SearchMethods
 
 
 __all__ = (
+    'Alert',
+    'AlertMethods',
     'APIError',
     'Connection',
     'ConnectionError',
@@ -48,6 +51,9 @@ class Matchlight(object):
     (projects, and records).
 
     Attributes:
+        alerts: :class:`~matchlight.alert.AlertMethods` object
+            with access to alert methods for Matchlight Fingerprint
+            Monitoring.
         projects: :class:`~matchlight.project.ProjectMethods` object
             with access to project methods for Matchlight Fingerprint
             Monitoring.
@@ -81,6 +87,7 @@ class Matchlight(object):
         """
         self.conn = Connection(
             access_key=access_key, secret_key=secret_key, **kwargs)
+        self.alerts = AlertMethods(self.conn)
         self.projects = ProjectMethods(self.conn)
         self.feeds = FeedMethods(self.conn)
         self.records = RecordMethods(self.conn)
