@@ -1,6 +1,7 @@
 """Unit tests the alert methods of the Matchlight SDK."""
 import datetime
 import json
+import time
 import uuid
 
 import httpretty
@@ -115,7 +116,7 @@ def test_alert_filter_archived(connection, alert, alert_payload):
 def test_alert_filter_project(connection, alert, alert_payload, project):
     """Verifies alert filtering on 'upload_token'."""
     httpretty.register_uri(
-        httpretty.GET, '{}/alerts?upload_token={}'.format(
+        httpretty.GET, '{}/alerts?upload_token_filter={}'.format(
             matchlight.MATCHLIGHT_API_URL_V2,
             project.upload_token
         ),
@@ -125,6 +126,68 @@ def test_alert_filter_project(connection, alert, alert_payload, project):
     )
 
     alerts = connection.alerts.filter(project=project)
+    assert len(alerts) == 1
+    assert alerts[0].id == alert_payload['id']
+
+
+@pytest.mark.httpretty
+def test_alert_filter_record(connection, alert, alert_payload,
+                             document_record):
+    """Verifies alert filtering on 'record_id'."""
+    httpretty.register_uri(
+        httpretty.GET, '{}/alerts?record_id_filter={}'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            document_record.id
+        ),
+        body=json.dumps({'data': [alert_payload]}),
+        content_type='application/json',
+        status=200
+    )
+
+    alerts = connection.alerts.filter(record=document_record)
+    assert len(alerts) == 1
+    assert alerts[0].id == alert_payload['id']
+
+
+@pytest.mark.httpretty
+def test_alert_filter_mtime(connection, alert, alert_payload):
+    """Verifies alert filtering on 'seen'."""
+    now = time.time()
+    # Two days ago
+    old_payload = alert_payload.copy()
+    old_payload['mtime'] = now - 172800
+    old_payload['id'] = str(uuid.uuid4())
+
+    # Get all alerts
+    httpretty.register_uri(
+        httpretty.GET, '{}/alerts?mtime={}'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            now - 259200
+        ),
+        body=json.dumps({'data': [alert_payload, old_payload]}),
+        content_type='application/json',
+        status=200
+    )
+
+    alerts = connection.alerts.filter(
+        last_modified=datetime.datetime.fromtimestamp(now - 259200)
+    )
+    assert len(alerts) == 2
+
+    # Get new alerts
+    httpretty.register_uri(
+        httpretty.GET, '{}/alerts?mtime={}'.format(
+            matchlight.MATCHLIGHT_API_URL_V2,
+            now - 86400
+        ),
+        body=json.dumps({'data': [alert_payload]}),
+        content_type='application/json',
+        status=200
+    )
+
+    alerts = connection.alerts.filter(
+        last_modified=datetime.datetime.fromtimestamp(now - 86400)
+    )
     assert len(alerts) == 1
     assert alerts[0].id == alert_payload['id']
 

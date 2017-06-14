@@ -44,6 +44,25 @@ def number_of_unseen_alerts():
 
 
 @pytest.fixture(scope='function')
+def document(request):
+    """A document mapping fixture."""
+    return {
+        'id': uuid.uuid4().hex,
+        'name': 'Document record',
+        'description': '',
+        'ctime': time.time(),
+        'mtime': time.time(),
+        'metadata': {},
+    }
+
+
+@pytest.fixture(scope='function')
+def document_record(document):
+    """A document record fixture."""
+    return matchlight.Record(**document)
+
+
+@pytest.fixture(scope='function')
 def project_name():
     """A project name fixture."""
     return 'Test Project'
@@ -87,7 +106,7 @@ def project(project_payload):
 
 
 @pytest.fixture(scope='function')
-def alert_payload(id):
+def alert_payload(id, upload_token):
     """An alert payload artifact."""
     return {
         'id': id,
@@ -102,6 +121,7 @@ def alert_payload(id):
         'mtime': time.time(),
         'seen': 'true',
         'archived': 'true',
+        'upload_token': upload_token
     }
 
 

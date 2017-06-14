@@ -1,6 +1,7 @@
 """An interface for creating and retrieving alerts in Matchlight."""
 from __future__ import absolute_import
 
+import calendar
 import datetime
 import json
 
@@ -17,7 +18,7 @@ class Alert(object):
     """Represents an alert."""
 
     def __init__(self, id, number, type, url, url_metadata, ctime, mtime, seen,
-                 archived):
+                 archived, upload_token):
         """Initializes a new alert.
 
         Args:
@@ -42,6 +43,7 @@ class Alert(object):
         self.mtime = mtime
         self.seen = seen
         self.archived = archived
+        self.upload_token = upload_token
 
     @classmethod
     def from_mapping(cls, mapping):
@@ -56,6 +58,7 @@ class Alert(object):
             mtime=mapping['mtime'],
             seen=True if mapping['seen'] == 'true' else False,
             archived=True if mapping['archived'] == 'true' else False,
+            upload_token=mapping['upload_token'],
         )
 
     @property
@@ -122,7 +125,8 @@ class AlertMethods(object):
         """Returns all alerts associated with the account."""
         return self.filter()
 
-    def filter(self, seen=None, archived=None, project=None):
+    def filter(self, seen=None, archived=None, project=None,
+               record=None, last_modified=None):
         """Returns a list of alerts.
 
         Providing an optional **seen** keyword argument will only
@@ -133,6 +137,12 @@ class AlertMethods(object):
 
         Providing an optional **project** keyword argument will only
         return alerts that are associated with a specific project.
+
+        Providing an optional **record** keyword argument will only
+        return alerts that are associated with a specific record.
+
+        Providing an optional **last_modified** keyword argument will only
+        return alerts with a last_modifed less than the argument.
 
         Example:
             Request all unseen alerts::
@@ -158,6 +168,9 @@ class AlertMethods(object):
             archived (:obj:`bool`, optional):
             project (:class:`~.Project`, optional): a project object.
                 Defaults to all projects if not specified.
+            record (:class:`~.Record`, optional): a record object.
+                Defaults to all projects if not specified.
+            last_modified (:obj:`datetime`, optional): a datetime object
 
         Returns:
             :obj:`list` of :class:`~.Alert`: List of alerts that
@@ -179,12 +192,24 @@ class AlertMethods(object):
         else:
             upload_token = None
 
+        if record is not None:
+            record_id = record.id
+        else:
+            record_id = None
+
+        if last_modified is not None:
+            mtime = calendar.timegm(last_modified.timetuple())
+        else:
+            mtime = None
+
         response = self.conn.request(
             '/alerts',
             params={
                 'seen': seen_int,
                 'archived': archived_int,
-                'upload_token_filter': upload_token
+                'upload_token_filter': upload_token,
+                'record_id_filter': record_id,
+                'mtime': mtime
             }
         )
         alerts = []
