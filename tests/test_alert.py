@@ -208,8 +208,8 @@ def test_alert_edit(connection, alert, alert_payload):
             alert.id,
         ),
         body=json.dumps({
-            'archived': 'true',
-            'seen': 'true'
+            'archived': True,
+            'seen': True
         }),
         status=200
     )
@@ -224,8 +224,8 @@ def test_alert_edit(connection, alert, alert_payload):
             alert.id,
         ),
         body=json.dumps({
-            'archived': 'false',
-            'seen': 'true'
+            'archived': False,
+            'seen': True
         }),
         status=200
     )
@@ -240,8 +240,8 @@ def test_alert_edit(connection, alert, alert_payload):
             alert.id,
         ),
         body=json.dumps({
-            'archived': 'false',
-            'seen': 'false'
+            'archived': False,
+            'seen': False
         }),
         status=200
     )
@@ -256,8 +256,8 @@ def test_alert_edit(connection, alert, alert_payload):
             alert.id,
         ),
         body=json.dumps({
-            'archived': 'true',
-            'seen': 'true'
+            'archived': True,
+            'seen': True
         }),
         status=200
     )

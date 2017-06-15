@@ -238,10 +238,10 @@ class AlertMethods(object):
         """
         data = {}
         if seen is not None:
-            data['seen'] = 1 if seen is True else 0
+            data['seen'] = seen
 
         if archived is not None:
-            data['archived'] = 1 if archived is True else 0
+            data['archived'] = archived
 
         response = self.conn.request(
             '/alert/{}/edit'.format(alert_id),
@@ -249,8 +249,8 @@ class AlertMethods(object):
         )
         response = response.json()
         return {
-            'seen': True if response['seen'] == 'true' else False,
-            'archived': True if response['archived'] == 'true' else False
+            'seen': response['seen'],
+            'archived': response['archived']
         }
 
     def get_details(self, alert_id):
