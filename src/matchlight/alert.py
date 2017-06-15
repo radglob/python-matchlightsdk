@@ -121,13 +121,12 @@ class AlertMethods(object):
         """
         self.conn = ml_connection
 
-    def all(self):
-        """Returns all alerts associated with the account."""
-        return self.filter()
-
-    def filter(self, seen=None, archived=None, project=None,
-               record=None, last_modified=None):
+    def filter(self, limit, seen=None, archived=None, project=None,
+               record=None, last_modified=None, offset=None):
         """Returns a list of alerts.
+
+        Providing a **limit** keyword argument will limit the number of alerts
+        returned. recomended is 50.
 
         Providing an optional **seen** keyword argument will only
         return alerts that match that property
@@ -144,10 +143,13 @@ class AlertMethods(object):
         Providing an optional **last_modified** keyword argument will only
         return alerts with a last_modifed less than the argument.
 
+        Providing an optional **offset** keyword argument will skip this number
+        of alerts from being returned.
+
         Example:
             Request all unseen alerts::
 
-                >>> ml.alerts.filter(seen=False)
+                >>> ml.alerts.filter(seen=False, limit=50)
                 [<Alert(number="1024",
                 id="625a732ad0f247beab18595z951c2088a3")>,
                 Alert(number="1025",
@@ -157,20 +159,23 @@ class AlertMethods(object):
 
                 >>> my_project
                 <Project(name="Super Secret Algorithm", type="source_code")>
-                >>> ml.alerts.filter(project=my_project)
+                >>> ml.alerts.filter(project=my_project, limit=50)
                 [<Alert(number="1024",
                 id="625a732ad0f247beab18595z951c2088a3")>,
                 Alert(number="1025",
                 id="f9427dd5a24d4a98b2069004g04c2977")]
 
         Args:
+            limit (:obj:`int`):
+                Don't return more than this number of alerts.
             seen (:obj:`bool`, optional):
             archived (:obj:`bool`, optional):
             project (:class:`~.Project`, optional): a project object.
                 Defaults to all projects if not specified.
             record (:class:`~.Record`, optional): a record object.
                 Defaults to all projects if not specified.
-            last_modified (:obj:`datetime`, optional): a datetime object
+            last_modified (:obj:`datetime`, optional):
+                Skip this number of alerts.
 
         Returns:
             :obj:`list` of :class:`~.Alert`: List of alerts that
@@ -205,15 +210,17 @@ class AlertMethods(object):
         response = self.conn.request(
             '/alerts',
             params={
+                'limit': limit,
                 'seen': seen_int,
                 'archived': archived_int,
                 'upload_token_filter': upload_token,
                 'record_id_filter': record_id,
-                'mtime': mtime
+                'mtime': mtime,
+                'offset': offset
             }
         )
         alerts = []
-        for payload in response.json().get('data', []):
+        for payload in response.json().get('alerts', []):
             alerts.append(Alert.from_mapping(payload))
         return alerts
 
@@ -267,6 +274,3 @@ class AlertMethods(object):
                 return
             else:
                 raise
-
-    def __iter__(self):
-        return iter(self.filter())
