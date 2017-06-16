@@ -165,6 +165,19 @@ class AlertMethods(object):
                 Alert(number="1025",
                 id="f9427dd5a24d4a98b2069004g04c2977")]
 
+            Request sets of alerts using pagination::
+
+                >>> ml.alerts.filter(limit=50)
+                [<Alert(number="1027",
+                id="625a732ad247beab18595z951c2088a3")>,
+                Alert(number="1026",
+                id="f9427dd5a24d4a98b2069004g04c2977")...
+                >>> ml.alerts.filter(limit=50, offset=50)
+                [<Alert(number="977",
+                id="59d5a791g8d4436aaffe64e4b15474a5")>,
+                Alert(number="976",
+                id="6b1001aaec5a48f19d17171169eebb56")...
+
         Args:
             limit (:obj:`int`):
                 Don't return more than this number of alerts.
