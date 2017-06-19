@@ -91,23 +91,6 @@ class Alert(object):
 
 class AlertMethods(object):
     """Provides methods for interfacing with the alerts API.
-
-    Examples:
-
-        Get alert by alert id::
-
-            >>> alert = ml.alerts.get("0760570a2c4a4ea68d526f58bab46cbd")
-            >>> alert
-            <Alert(number=1024,
-            id="0760570a2c4a4ea68d526f58bab46cbd")>
-
-        Archive an alert::
-
-            >>> alert
-            <Alert(number=1024,
-            id="0760570a2c4a4ea68d526f58bab46cbd")>
-            >>> ml.alert.edit(alert, archived=True)
-
     """
 
     def __init__(self, ml_connection):  # noqa: D205,D400
@@ -146,7 +129,7 @@ class AlertMethods(object):
         Providing an optional **offset** keyword argument will skip this number
         of alerts from being returned.
 
-        Example:
+        Examples:
             Request all unseen alerts::
 
                 >>> ml.alerts.filter(seen=False, limit=50)
@@ -239,6 +222,18 @@ class AlertMethods(object):
 
     def edit(self, alert_id, seen=None, archived=None):
         """Edits an alert.
+
+        Example:
+            Archive an alert::
+
+                >>> alert
+                <Alert(number=1024,
+                id="0760570a2c4a4ea68d526f58bab46cbd")>
+                >>> ml.alert.edit(alert, archived=True)
+                {
+                    'seen': True,
+                    'archived': True
+                }
 
         Arguments:
             alert (:obj:`str`): An alert id.

@@ -23,8 +23,12 @@ clean_requirements:
 clean_wheels:
 	rm -rf wheelhouse/
 
+.PHONY: docs
 docs:
-	@python setup.py build_sphinx
+	tox -e docs
+
+serve_docs:
+	tox -e docs,serve-docs
 
 # Wheel generation targets borrowed from sdispater/pendulum:
 # <https://github.com/sdispater/pendulum/blob/master/Makefile>
@@ -47,9 +51,6 @@ $(REQUIREMENTS_ARTIFACTS): $(REQUIREMENTS_DIR)/src/%.in
 	pip-compile $< -o $@
 
 requirements: $(patsubst %,$(REQUIREMENTS_ARTIFACTS),$(REQUIREMENTS_TARGETS))
-
-serve_docs:
-	tox -e docs,serve-docs
 
 tox:
 	@pyenv local ${PYENVS}
