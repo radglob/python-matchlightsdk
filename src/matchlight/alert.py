@@ -90,8 +90,7 @@ class Alert(object):
 
 
 class AlertMethods(object):
-    """Provides methods for interfacing with the alerts API.
-    """
+    """Provides methods for interfacing with the alerts API."""
 
     def __init__(self, ml_connection):  # noqa: D205,D400
         """Initializes an alerts interface with the given Matchlight
