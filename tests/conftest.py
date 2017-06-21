@@ -26,6 +26,12 @@ def connection(access_key, secret_key):
 
 
 @pytest.fixture(scope='function')
+def id():
+    """Provides a fake id in the form of a UUID4."""
+    return str(uuid.uuid4())
+
+
+@pytest.fixture(scope='function')
 def number_of_records():
     """A record count fixture."""
     return 10
@@ -35,6 +41,25 @@ def number_of_records():
 def number_of_unseen_alerts():
     """An unseen alerts count fixture."""
     return 10
+
+
+@pytest.fixture(scope='function')
+def document(request):
+    """A document mapping fixture."""
+    return {
+        'id': uuid.uuid4().hex,
+        'name': 'Document record',
+        'description': '',
+        'ctime': time.time(),
+        'mtime': time.time(),
+        'metadata': {},
+    }
+
+
+@pytest.fixture(scope='function')
+def document_record(document):
+    """A document record fixture."""
+    return matchlight.Record(**document)
 
 
 @pytest.fixture(scope='function')
@@ -78,3 +103,48 @@ def project_payload(project_name, project_type, upload_token,
 def project(project_payload):
     """A project instance fixture, parametrized by project type."""
     return matchlight.Project.from_mapping(project_payload)
+
+
+@pytest.fixture(scope='function')
+def alert_payload(id, upload_token):
+    """An alert payload artifact."""
+    return {
+        'id': id,
+        'alert_number': 10,
+        'type': 'pii',
+        'url': 'https://terbiumlabs.com/matchlight.html',
+        'url_metadata': {
+            'description': 'Matchlight provides intelligence on your most imp',
+            'tor_only': 'false'
+        },
+        'ctime': time.time(),
+        'mtime': time.time(),
+        'seen': 'true',
+        'archived': 'true',
+        'upload_token': upload_token
+    }
+
+
+@pytest.fixture(scope='function')
+def alert_details_pii_payload():
+    """An alert details payload artifact for a pii alert."""
+    return {
+        'details': {
+            'pii': [
+                {
+                    'email': 'o****@gmail.com',
+                    'first': 'a****',
+                    'last': 'b****',
+                    'record_id': 'd3c59d38c4054f62876a2a7a3dca41ca'
+                }
+            ]
+        },
+        'notes': '',
+        'type': 'pii'
+    }
+
+
+@pytest.fixture
+def alert(alert_payload):
+    """An alert instance fixture."""
+    return matchlight.Alert.from_mapping(alert_payload)

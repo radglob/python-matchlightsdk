@@ -55,19 +55,6 @@ PII_RECORDS_RAW_PATH = 'tests/fixtures/pii_records_raw.json'
 #     phone = factory.LazyAttribute(lambda _: fake.phone_number())
 
 
-@pytest.fixture(scope='function')
-def document(request):
-    """A document record fixture."""
-    return {
-        'id': uuid.uuid4().hex,
-        'name': 'Document record',
-        'description': '',
-        'ctime': time.time(),
-        'mtime': time.time(),
-        'metadata': {},
-    }
-
-
 @pytest.fixture(scope='function', params=[PII_RECORDS_RAW_PATH])
 def pii_records_raw(request):
     """Sample PII records."""

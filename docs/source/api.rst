@@ -31,6 +31,14 @@ Record Methods
 .. autoclass:: matchlight.record.RecordMethods
    :members:
 
+.. _alertmethods:
+
+Alert Methods
+**************
+
+.. autoclass:: matchlight.alert.AlertMethods
+   :members:
+
 .. _feedmethods:
 
 Data Feeds
@@ -69,6 +77,12 @@ Record
 ******
 
 .. autoclass:: matchlight.Record
+   :members:
+
+Alert
+******
+
+.. autoclass:: matchlight.Alert
    :members:
 
 Feed
