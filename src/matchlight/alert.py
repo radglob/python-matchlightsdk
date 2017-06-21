@@ -108,7 +108,8 @@ class AlertMethods(object):
         """Returns a list of alerts.
 
         Providing a **limit** keyword argument will limit the number of alerts
-        returned. recomended is 50.
+        returned. The request may time out if this is set too high, a limit of
+        50 is recomended to avoid timeouts.
 
         Providing an optional **seen** keyword argument will only
         return alerts that match that property
