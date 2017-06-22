@@ -21,7 +21,6 @@ class Feed(object):
     """Represents a Matchlight Data Feed.
 
     Examples:
-
             >>> ml = matchlight.Matchlight()
             >>> feed = ml.feeds.filter()[0]
             >>> feed
