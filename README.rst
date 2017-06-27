@@ -51,37 +51,42 @@ necessary, and ensure that your code passes all linters (see tox.ini).
 
 **Building**
 
-First, install all requirements:
+First, install all requirements::
 
     $ make requirements
 
-Then:
+Then::
 
     $ make build
 
 **Tests**
 
-To run tests, install test requirements:
+To run tests, install test requirements::
 
     $ make dev_requirements
 
-Then:
+You will also need to install Pyenv https://github.com/pyenv/pyenv#installation
+The easiest way is with Homebrew::
+    $ brew update
+    $ brew install pyenv
+
+Then::
 
     $ make test
 
 **Update Requirements**
 
 If you made a change that adds a new requirement, add it to the correct file in 'requirements/src'.
-Then update the requirements file:
+Then update the requirements file::
 
     $ pip-compile --output-file requirements/<file>.txt requirements/src/<file>.in
 
 **Update Documentation**
 
-To update the documentation:
+To update the documentation::
 
     $ make docs
 
-To preview changes:
+To preview changes::
 
     $ make serve docs
