@@ -53,7 +53,7 @@ necessary, and ensure that your code passes all linters (see tox.ini).
 
 First, install all requirements:
 
-    $ make build_requirements
+    $ make requirements
 
 Then:
 
@@ -63,7 +63,7 @@ Then:
 
 To run tests, install test requirements:
 
-    $ make dev_dependencies
+    $ make dev_requirements
 
 Then:
 
@@ -85,4 +85,3 @@ To update the documentation:
 To preview changes:
 
     $ make serve docs
-

@@ -32,7 +32,8 @@ serve_docs:
 requirements:
 	@pip install -r $(REQUIREMENTS_DIR)/build.txt
 
-dev_requirements: 
+dev_requirements:
+	@pip install -r $(REQUIREMENTS_DIR)/build.txt
 	@pip install -r $(REQUIREMENTS_DIR)/dev.txt
 
 .PHONY: test
