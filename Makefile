@@ -38,5 +38,12 @@ dev_requirements:
 
 .PHONY: test
 test:
+	@make install_envs
 	@pyenv local ${PYENVS}
 	@tox
+
+install_envs:
+	@for v in ${PYENVS} ; do \
+		echo "Installing " $$v ; \
+		pyenv install -s $$v ; \
+	done

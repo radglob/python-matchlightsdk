@@ -70,6 +70,8 @@ The easiest way is with Homebrew::
     $ brew update
     $ brew install pyenv
 
+NOTE: Make sure that pyenv is added to your path
+
 Then::
 
     $ make test
