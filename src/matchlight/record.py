@@ -79,16 +79,13 @@ class RecordMethods(object):
     """Provides methods for interfacing with the records API.
 
     Examples:
-
         Get record by record id::
-
             >>> record = ml.records.get("0760570a2c4a4ea68d526f58bab46cbd")
             >>> record
             <Record(name="pce****@terbiumlabs.com",
             id="0760570a2c4a4ea68d526f58bab46cbd")>
 
         Add PII records to a project::
-
             >>> pii_project = ml.projects.add(
             ...     name="Employee Database May 2016",
             ...     project_type="pii")
@@ -103,7 +100,6 @@ class RecordMethods(object):
             ...      **record_data)
 
         Delete a record::
-
             >>> record
             <Record(name="fam****@terbiumlabs.com",
             id="655a732ad0f243beab1801651c2088a3")>
