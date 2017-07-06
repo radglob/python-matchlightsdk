@@ -86,7 +86,7 @@ class SearchMethods(object):
 
         data = {'fingerprints': list(fingerprints)}
         response = self.conn.request(
-            '/ubersearch',
+            '/detailed_search',
             data=json.dumps(data),
             endpoint=self.conn.search_endpoint,
             timeout=90.0)
