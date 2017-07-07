@@ -164,6 +164,7 @@ class AlertMethods(object):
             record (:class:`~.Record`, optional): a record object.
                 Defaults to all projects if not specified.
             last_modified (:obj:`datetime`, optional):
+            offset (:obj:`int`):
                 Skip this number of alerts.
 
         Returns:
