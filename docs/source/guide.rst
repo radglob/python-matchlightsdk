@@ -22,7 +22,9 @@ Web. Customers generate a one-way data fingerprint, which is the only
 information submitted to Terbium. Terbium then monitors the dark web for the
 appearance of identical data fingerprints, alerting customers to the
 appearance of their information if and when it is posted. Customers may
-monitor for exact strings that are 14 characters or greater in length.
+monitor for exact strings that are 14 characters or greater in length. An alert
+is generated when a set of fingerprints on the dark web matches a set
+of finger in a record.
 
 *Retrospective Search*
 
@@ -52,6 +54,7 @@ Overview
     * `Authentication`_
     * `Projects`_
     * `Records`_
+    * `Alerts`_
     * `DataFeeds`_
     * `Search`_
 
@@ -220,6 +223,38 @@ Delete a record in the same way you would delete a project.
 .. code-block:: python
 
     ml.records.delete(new_record)
+
+
+Alerts
+#######
+
+Alerts are created when a match is found between data on the dark web and a
+record under monitoring.
+
+Checking for Alerts
+-------------------
+
+Get up to 50 of the latest unseen Alerts.
+
+.. code-block:: python
+
+    ml.alerts.filter(seen=False, limit=50)
+
+Get Alerts for a project.
+
+.. code-block:: python
+
+    ml.alerts.filter(project=pii_project, limit=50)
+
+Marking an Alert as seen
+------------------------
+
+Alerts can be marked as seen or archived like an inbox.
+
+.. code-block:: python
+
+    ml.alert.edit(alert, seen=True)
+
 
 DataFeeds
 #########
