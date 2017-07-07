@@ -24,7 +24,7 @@ appearance of identical data fingerprints, alerting customers to the
 appearance of their information if and when it is posted. Customers may
 monitor for exact strings that are 14 characters or greater in length. An alert
 is generated when a set of fingerprints on the dark web matches a set
-of finger in a record.
+of fingerprints in a record.
 
 *Retrospective Search*
 
