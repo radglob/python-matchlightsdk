@@ -64,23 +64,16 @@ class Alert(object):
     @property
     def last_modified(self):
         """:class:`datetime.datetime`: The last modified timestamp."""
+        if self.mtime is None:
+            return None
         return datetime.datetime.fromtimestamp(self.mtime)
 
     @property
     def date(self):
         """:class:`datetime.datetime`: The date created timestamp."""
+        if self.ctime is None:
+            return None
         return datetime.datetime.fromtimestamp(self.ctime)
-
-    @property
-    def details(self):
-        """:obj:`dict`: Returns the alert details as a mapping."""
-        try:
-            return self.conn.request('/alert/{}/details'.format(self.id))
-        except matchlight.error.APIError as err:
-            if err.args[0] == 404:
-                return
-            else:
-                raise
 
     def __repr__(self):  # pragma: no cover
         return '<Alert(number="{}", id="{}")>'.format(
