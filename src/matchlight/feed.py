@@ -21,7 +21,6 @@ class Feed(object):
     """Represents a Matchlight Data Feed.
 
     Examples:
-
             >>> ml = matchlight.Matchlight()
             >>> feed = ml.feeds.filter()[0]
             >>> feed
@@ -126,7 +125,7 @@ class FeedMethods(object):
         """Daily counts for a feed for a given date range.
 
         Args:
-            feed (:class:`~.Feed`): A feed instance.
+            feed (:class:`~.Feed`): A feed instance or feed name.
             start_date (:class:`datetime.datetime`): Start of date range.
             end_date (:class:`datetime.datetime`): End of date range.
 
@@ -134,12 +133,17 @@ class FeedMethods(object):
             :obj:`dict`: Mapping of dates (``YYYY-MM-DD``) to alert counts.
 
         """
+        if isinstance(feed, six.string_types):
+            feed_name = feed
+        else:
+            feed_name = feed.name
+
         data = {
             'start_date': int(matchlight.utils.datetime_to_unix(start_date)),
             'end_date': int(matchlight.utils.datetime_to_unix(end_date)),
         }
         response = self.conn.request(
-            '/feeds/{feed_name}'.format(feed_name=feed.name),
+            '/feeds/{feed_name}'.format(feed_name=feed_name),
             data=json.dumps(data))
         return self._format_count(response.json())
 
@@ -147,7 +151,7 @@ class FeedMethods(object):
         """Downloads feed data for the given date range.
 
         Args:
-            feed (:class:`~.Feed`): A feed instance.
+            feed (:class:`~.Feed`): A feed instance or feed name.
             start_date (:class:`datetime.datetime`): Start of date range.
             end_date (:class:`datetime.datetime`): End of date range.
             save_path (:obj:`str`): Path to output file.
@@ -156,12 +160,17 @@ class FeedMethods(object):
             :obj:`list` of :obj:`dict`: All feed hits for the given range.
 
         """
+        if isinstance(feed, six.string_types):
+            feed_name = feed
+        else:
+            feed_name = feed.name
+
         data = {
             'start_date': int(matchlight.utils.datetime_to_unix(start_date)),
             'end_date': int(matchlight.utils.datetime_to_unix(end_date)),
         }
         response = self.conn.request(
-            '/feed/{feed_name}/prepare'.format(feed_name=feed.name),
+            '/feed/{feed_name}/prepare'.format(feed_name=feed_name),
             data=json.dumps(data))
 
         if response.status_code != 200:
@@ -173,7 +182,7 @@ class FeedMethods(object):
         status = 'pending'
         while status == 'pending':
             response = self.conn.request(
-                '/feed/{feed_name}/link'.format(feed_name=feed.name),
+                '/feed/{feed_name}/link'.format(feed_name=feed_name),
                 data=json.dumps(data))
             status = response.json().get('status', None)
             time.sleep(1)

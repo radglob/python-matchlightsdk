@@ -8,7 +8,6 @@ import uuid
 
 import httpretty
 import pytest
-import six.moves
 
 import matchlight
 
@@ -55,19 +54,6 @@ PII_RECORDS_RAW_PATH = 'tests/fixtures/pii_records_raw.json'
 #     phone = factory.LazyAttribute(lambda _: fake.phone_number())
 
 
-@pytest.fixture(scope='function')
-def document(request):
-    """A document record fixture."""
-    return {
-        'id': uuid.uuid4().hex,
-        'name': 'Document record',
-        'description': '',
-        'ctime': time.time(),
-        'mtime': time.time(),
-        'metadata': {},
-    }
-
-
 @pytest.fixture(scope='function', params=[PII_RECORDS_RAW_PATH])
 def pii_records_raw(request):
     """Sample PII records."""
@@ -98,11 +84,14 @@ def test_record_add_document(min_score, connection, project, document):
     httpretty.register_uri(
         httpretty.POST, '{}/records/upload/document/{}'.format(
             matchlight.MATCHLIGHT_API_URL_V2, project.upload_token),
-        body=json.dumps({'id': uuid.uuid4().hex}),
-        content_type='application/json', status=200)
-    httpretty.register_uri(
-        httpretty.GET, '{}/records'.format(matchlight.MATCHLIGHT_API_URL_V2),
-        body=json.dumps({'data': [document]}),
+        body=json.dumps({
+            'id': uuid.uuid4().hex,
+            'name': 'name',
+            'description': '',
+            'ctime': time.time(),
+            'mtime': time.time(),
+            'metadata': '{}',
+        }),
         content_type='application/json', status=200)
     connection.records.add_document(
         project=project,
@@ -130,19 +119,17 @@ def test_record_add_pii(connection, project, pii_records_raw):
             matchlight.MATCHLIGHT_API_URL_V2, project.upload_token),
         responses=[
             httpretty.Response(
-                body=json.dumps({'id': payload['id']}),
+                body=json.dumps({
+                    'id': payload['id'],
+                    'name': payload['name'],
+                    'description': payload['description'],
+                    'ctime': payload['ctime'],
+                    'mtime': payload['mtime'],
+                    'metadata': '{}',
+                }),
                 content_type='application/json',
                 status=200)
             for payload in record_data
-        ])
-    httpretty.register_uri(
-        httpretty.GET, '{}/records'.format(matchlight.MATCHLIGHT_API_URL_V2),
-        responses=[
-            httpretty.Response(
-                body=json.dumps({'data': record_data[:i + 1]}),
-                content_type='application/json',
-                status=200)
-            for i in six.moves.range(len(record_data))
         ])
     for i, pii_record in enumerate(pii_records_raw):
         record = connection.records.add_pii(

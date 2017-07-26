@@ -54,6 +54,18 @@ class Record(object):
         self.mtime = mtime
         self.metadata = metadata
 
+    @classmethod
+    def from_mapping(cls, mapping):
+        """Creates a new project instance from the given mapping."""
+        return cls(
+            id=mapping['id'],
+            name=mapping['name'],
+            description=mapping['description'],
+            ctime=mapping['ctime'],
+            mtime=mapping['mtime'],
+            metadata=mapping['metadata'],
+        )
+
     @property
     def user_provided_id(self):
         """:obj:`int`: The user provided record identifier."""
@@ -79,16 +91,13 @@ class RecordMethods(object):
     """Provides methods for interfacing with the records API.
 
     Examples:
-
         Get record by record id::
-
             >>> record = ml.records.get("0760570a2c4a4ea68d526f58bab46cbd")
             >>> record
             <Record(name="pce****@terbiumlabs.com",
             id="0760570a2c4a4ea68d526f58bab46cbd")>
 
         Add PII records to a project::
-
             >>> pii_project = ml.projects.add(
             ...     name="Employee Database May 2016",
             ...     project_type="pii")
@@ -103,7 +112,6 @@ class RecordMethods(object):
             ...      **record_data)
 
         Delete a record::
-
             >>> record
             <Record(name="fam****@terbiumlabs.com",
             id="655a732ad0f243beab1801651c2088a3")>
@@ -142,9 +150,13 @@ class RecordMethods(object):
         }
         if min_score is not None:
             data['metadata'] = {'min_score': str(min_score)}
-        r = self.conn.request('/records/upload/document/{upload_token}'.format(
-            upload_token=project.upload_token), data=json.dumps(data))
-        return self.get(r.json().get('id'))
+        response = self.conn.request(
+            '/records/upload/document/{upload_token}'.format(
+                upload_token=project.upload_token
+            ),
+            data=json.dumps(data)
+        )
+        return Record.from_mapping(response.json())
 
     def add_pii(self, project, description, email, first_name=None,
                 middle_name=None, last_name=None, ssn=None, address=None,
@@ -219,7 +231,7 @@ class RecordMethods(object):
 
         response = self.conn.request('/records/upload/pii/{}'.format(
             project.upload_token), data=json.dumps(data))
-        return self.get(response.json().get('id'))
+        return Record.from_mapping(response.json())
 
     def add_source_code(self, project, name, description, code_path,
                         min_score=None):
@@ -241,7 +253,7 @@ class RecordMethods(object):
             data['metadata'] = {'min_score': str(min_score)}
         response = self.conn.request('/records/upload/source_code/{}'.format(
             project.upload_token), data=data)
-        return self.get(response.json().get('id'))
+        return Record.from_mapping(response.json())
 
     def delete(self, record_or_id):
         """Delete a fingerprinted record.

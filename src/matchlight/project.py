@@ -93,15 +93,12 @@ class ProjectMethods(collections_abc.Iterable):
     """Provides methods for interfacing with the feeds API.
 
     Examples:
-
         Get project from upload token::
-
             >>> ml.projects.get('3ef85448c-d244-431e-a207-cf8d37ae3bfe')
             <Project(name='Customer Database May 2016',
             project_type='pii')>
 
         Filter on project types::
-
             >>> ml.projects.filter(project_type='pii')
             [<Project(name='...', project_type='pii'),
             <Project(name='...', project_type='pii'),
@@ -112,7 +109,6 @@ class ProjectMethods(collections_abc.Iterable):
             <Project(name='...', project_type='source_code')]
 
         Create a new project::
-
             >>> project = ml.projects.add(
             ... name='Super secret algorithm',
             ... project_type='source_code')
@@ -120,7 +116,6 @@ class ProjectMethods(collections_abc.Iterable):
             <Project(name='Super Secret Algorithm', type='source_code')>
 
         Edit a project::
-
             >>> project = ml.projects.edit(project,
             ... 'Updated Super Secret Algorithm')
             >>> project
@@ -128,13 +123,11 @@ class ProjectMethods(collections_abc.Iterable):
             type='source_code'>
 
         Delete a project::
-
             >>> ml.projects.delete(project)
             >>> ml.projects.get(project.upload_token)
             None
 
         Get project details::
-
             >>> executives = ml.projects.add("Executive List 2016", "pii")
             >>> executives.details
             {'last_date_modified': 1472671877,

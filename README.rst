@@ -48,3 +48,47 @@ Contributing
 Bug reports and pull requests are welcome. If you would like to contribute,
 please create a pull request against **master**. Include unit tests if
 necessary, and ensure that your code passes all linters (see tox.ini).
+
+**Building**
+
+First, install all requirements::
+
+    $ make requirements
+
+Then::
+
+    $ make build
+
+**Tests**
+
+To run tests, install test requirements::
+
+    $ make dev_requirements
+
+You will also need to install Pyenv https://github.com/pyenv/pyenv#installation
+The easiest way is with Homebrew::
+    $ brew update
+    $ brew install pyenv
+
+NOTE: Make sure that pyenv is added to your path
+
+Then::
+
+    $ make test
+
+**Update Requirements**
+
+If you made a change that adds a new requirement, add it to the correct file in 'requirements/src'.
+Then update the requirements file::
+
+    $ pip-compile --output-file requirements/<file>.txt requirements/src/<file>.in
+
+**Update Documentation**
+
+To update the documentation::
+
+    $ make docs
+
+To preview changes::
+
+    $ make serve docs
