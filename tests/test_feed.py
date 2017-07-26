@@ -126,6 +126,9 @@ def test_feed_counts(connection, feed, start_time, end_time):
     result = connection.feeds.counts(feed, start_time, end_time)
     assert result == connection.feeds._format_count(expected)
 
+    result = connection.feeds.counts(feed.name, start_time, end_time)
+    assert result == connection.feeds._format_count(expected)
+
 
 @pytest.mark.httpretty
 def test_feed_download(connection, feed, start_time, end_time,
@@ -162,6 +165,13 @@ def test_feed_download(connection, feed, start_time, end_time,
         content_type='text/csv',
         body='\n'.join(feed_report_csv))
     rows = connection.feeds.download(feed, start_time, end_time)
+    feed_rows = [
+        connection.feeds._format_feed(row)
+        for row in csv.DictReader(feed_report_csv)
+    ]
+    assert rows == feed_rows
+
+    rows = connection.feeds.download(feed.name, start_time, end_time)
     feed_rows = [
         connection.feeds._format_feed(row)
         for row in csv.DictReader(feed_report_csv)
