@@ -223,7 +223,7 @@ class AlertMethods(object):
                 >>> alert
                 <Alert(number=1024,
                 id="0760570a2c4a4ea68d526f58bab46cbd")>
-                >>> ml.alert.edit(alert, archived=True)
+                >>> ml.alerts.edit(alert, archived=True)
                 {
                     'seen': True,
                     'archived': True
@@ -238,6 +238,9 @@ class AlertMethods(object):
             :obj:`dict`: Updated alert metadata.
 
         """
+        if isinstance(alert_id, Alert):
+            alert_id = alert_id.id
+
         data = {}
         if seen is not None:
             data['seen'] = seen

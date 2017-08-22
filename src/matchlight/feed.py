@@ -77,8 +77,7 @@ class Feed(object):
     @property
     def start(self):
         """:class:`datetime.datetime`: When feed data collection began."""
-        return matchlight.utils.terbium_timestamp_to_datetime(
-            self.start_timestamp)
+        return datetime.datetime.fromtimestamp(self.start_timestamp)
 
     @property
     def end(self):  # noqa: D205,D400
@@ -88,8 +87,7 @@ class Feed(object):
 
         """
         if self.stop_timestamp:
-            return matchlight.utils.terbium_timestamp_to_datetime(
-                self.stop_timestamp)
+            return datetime.datetime.fromtimestamp(self.stop_timestamp)
 
     def __repr__(self):  # pragma: no cover
         return '<Feed(name="{name}", recent_alerts={alerts})>'.format(

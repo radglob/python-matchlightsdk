@@ -47,8 +47,8 @@ def feed_payload(feed_name, start_time, end_time):
         'name': feed_name,
         'description': '',
         'recent_alerts_count': 5,
-        'start_timestamp': start_time.strftime('%Y-%m-%dT%H:%M:%S'),
-        'stop_timestamp': end_time.strftime('%Y-%m-%dT%H:%M:%S'),
+        'start_timestamp': int(matchlight.utils.datetime_to_unix(start_time)),
+        'stop_timestamp': int(matchlight.utils.datetime_to_unix(end_time)),
     })
 
 
@@ -100,12 +100,8 @@ def test_feed_details(feed):
 
 def test_feed_timestamps(feed):
     """Verifies that feed timestamps are parsed correctly."""
-    start_time = matchlight.utils.terbium_timestamp_to_datetime(
-        feed.start_timestamp)
-    end_time = matchlight.utils.terbium_timestamp_to_datetime(
-        feed.stop_timestamp)
-    assert start_time == feed.start
-    assert end_time == feed.end
+    assert datetime.datetime.fromtimestamp(feed.start_timestamp) == feed.start
+    assert datetime.datetime.fromtimestamp(feed.stop_timestamp) == feed.end
 
 
 @pytest.mark.httpretty
