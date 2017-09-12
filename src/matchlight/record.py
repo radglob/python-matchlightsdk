@@ -200,7 +200,7 @@ class RecordMethods(object):
 
         if any((first_name, middle_name, last_name)):
             name_fingerprints = fingerprints_pii_name_variants(
-                first_name or '', middle_name or '', last_name or '')
+                first_name or '', middle_name or None, last_name or '')
             data['name_fingerprints'] = name_fingerprints
 
         if email is not None:
