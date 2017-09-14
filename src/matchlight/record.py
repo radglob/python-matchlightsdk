@@ -161,7 +161,7 @@ class RecordMethods(object):
     def add_pii(self, project, description, email, first_name=None,
                 middle_name=None, last_name=None, ssn=None, address=None,
                 city=None, state=None, zipcode=None, phone=None,
-                user_record_id='-'):
+                user_record_id='-', offline=False):
         """Creates a new PII record in the given project.
 
         Args:
@@ -185,6 +185,10 @@ class RecordMethods(object):
             user_record_id (:obj:`str`, optional): An optional, user
                 provided custom record identifier. Defaults to
                 :obj:`NoneType`.
+            offline (:obj:`bool`, optional): Run in "offline mode". No
+                data is sent to the Matchlight server. Returns a
+                dictionary of values instead of a :class:`~.Report`
+                instance.
 
         Returns:
             :class:`~.Record`: Created record with metadata.
@@ -229,9 +233,12 @@ class RecordMethods(object):
             phone_fingerprints = fingerprints_pii_phone_number(phone)
             data['phone_fingerprints'] = [phone_fingerprints]
 
-        response = self.conn.request('/records/upload/pii/{}'.format(
-            project.upload_token), data=json.dumps(data))
-        return Record.from_mapping(response.json())
+        if offline:
+            return data
+        else:
+            response = self.conn.request('/records/upload/pii/{}'.format(
+                project.upload_token), data=json.dumps(data))
+            return Record.from_mapping(response.json())
 
     def add_source_code(self, project, name, description, code_path,
                         min_score=None):
