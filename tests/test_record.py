@@ -137,3 +137,14 @@ def test_record_add_pii(connection, project, pii_records_raw):
             description='',
             **pii_record)
         assert record.id == record_data[i]['id']
+
+    httpretty.reset()
+
+    for i, pii_record in enumerate(pii_records_raw):
+        record = connection.records.add_pii(
+            project=project,
+            description='',
+            offline=True,
+            **pii_record)
+        assert isinstance(record, dict)
+        assert not httpretty.has_request()
